@@ -24,7 +24,8 @@ createAffilTbl = function(db, overwrite = TRUE){
     mutate(affil = gsub("^.*LSHTM.*$", "London School of Hygiene \\& Tropical Medicine", affil)) %>%
     mutate(affil = gsub("^.*Kakao corporation.*$", "Kakao Corporation", affil)) %>%
     mutate(affil = gsub("^.*National Chung[-]?Hsing University.*$",  "National Chung Hsing University", affil)) %>%
-    mutate(affil = gsub("^.*National Tsing[-]?Hua University.*$",  "National Tsing Hua University", affil))
+    mutate(affil = gsub("^.*National Tsing[-]?Hua University.*$",  "National Tsing Hua University", affil)) %>%
+    mutate(affil = str_trim(affil))
 
   affilTbl2 = affilTbl %>%
     distinct(affil) %>%
@@ -37,6 +38,6 @@ createAffilTbl = function(db, overwrite = TRUE){
 
   affilTbl = affilTbl %>% left_join(affilTbl2, by = "affil")
 
-  invisible(affilTbl2)
+  invisible(db)
 
 }
