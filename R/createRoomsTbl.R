@@ -1,7 +1,7 @@
 createRoomsTbl = function(db, overwrite = TRUE){
   Monday = dbReadTable(db, "Monday")
   i = which(is.na(Monday$A))[1]
-  Rooms = Monday[i,LETTERS[2:7]]
+  Rooms = c(Monday[i,LETTERS[2:7]], "Case Room 1 (260-005)")
   roomTbl = tibble(
     rname = str_trim(gsub("(^[^(]+).*$", "\\1", Rooms)),
     rnumber = gsub("^.*\\(([^)]+)\\)$", "\\1", Rooms))
