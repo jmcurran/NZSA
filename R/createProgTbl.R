@@ -45,6 +45,9 @@ createProgTbl = function(db, overwrite = TRUE){
     d = 1
     for(day in progDays){
       colnames(day)[1] = "Time"
+      day = day %>%
+        mutate(Time = as.integer(Time))
+
       contribSessionRows = which(is.na(day$Time))
 
       day = day[-1,] ## first row just has the day of the week in it
@@ -156,18 +159,18 @@ createProgTbl = function(db, overwrite = TRUE){
         mutate(Time = as.integer(Time))
 
       blockStart = contrib$Time[which(is.na(contrib$Time)) + 1]
-      blockEnd = contrib$Time[which(is.na(c(contrib$Time[-1], NA))) - 1]
+      blockEnd = contrib$Time[which(is.na(c(contrib$Time, NA))) - 1]
 
 
       for(block in 1:numContribBocks){
         sessionID = d * 1000 + block * 100
         talks = contrib %>%
-          filter(Time >= blockStart[b] & Time <= blockEnd[b])
+          filter(Time >= blockStart[block] & Time <= blockEnd[block])
 
         numTalks = nrow(talks)
 
         for(stream in 1:6){
-          talkEntries = talks %>% select(LETTERS[2:7][stream]) %>% unlist(use.names = FALSE)
+          talkEntries = talks %>% select((LETTERS[2:7])[stream]) %>% unlist(use.names = FALSE)
           progTbl = progTbl %>%
             add_row(programmeID = programmeID + (0:(numTalks - 1)),
                     sessionID = sessionID + 10 * stream,
@@ -181,10 +184,6 @@ createProgTbl = function(db, overwrite = TRUE){
           programmeID = programmeID + numTalks
         }
       }
-
-
-
-
       d = d + 1
     }
 
@@ -198,10 +197,10 @@ createProgTbl = function(db, overwrite = TRUE){
   titleTbl = dbReadTable(db, "titleTbl")
 
   progTbl = progTbl %>%
-    mutate(title = gsub("(^[^\n]+)\n.*$", "\\1", progTbl$rawEntry)) %>%
-    left_join(titleTbl)
+    mutate(title = tolower(gsub("(^[^\n]+)\n.*$", "\\1", progTbl$rawEntry))) %>%
+    left_join(titleTbl %>% mutate(title = tolower(title)), by = "title")
 
-  browser()
+  #browser()
 
   dbWriteTable(db, "progTbl", progTbl, overwrite = overwrite)
 }
