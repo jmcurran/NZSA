@@ -8,6 +8,15 @@ writeTT = function(path = "~/Dropbox/Work/2017/Conferences/NZSA-IASC/"){
   fileName = paste0(path, "00-Programme.Rmd")
   f1 = file(fileName, "w")
 
+  preamble = "---
+title: \"None\"
+  output:
+  html_document:
+  css: style.css
+  ---"
+
+  writeLines(preamble, f1)
+
   buildHTMLTable = function(dayProgTbl, d){
     numStreams = 6
 
@@ -65,18 +74,40 @@ writeTT = function(path = "~/Dropbox/Work/2017/Conferences/NZSA-IASC/"){
           tblRow = c(tblRow, "</tr>")
         }
       }else if(nRows >=2){ ##  2-3 talks or 2-3 session headers and 2-3 talks
+        #browser()
         tblRow = NULL
-        rooms = rowData %>%
-          select(roomID) %>%
-          left_join(roomTbl, by = "roomID") %>%
-          mutate(rname = paste0(rname, "(", rnumber, ")")) %>%
-          select(rname) %>%
-          unlist(use.names = FALSE)
 
-        tblRow = "<tr>"
-        tblRow = c(tblRow, "<td class = \"time\"></td>")
-        sessionStr = sprintf("<td class = \"sessionheader\">%s</td>", rooms)
-        tblRow = c(tblRow, sessionStr)
+        if("sessionheader" %in% rowData$type){
+
+          rooms = rowData %>%
+            filter(type == "sessionheader") %>%
+            select(roomID) %>%
+            left_join(roomTbl, by = "roomID") %>%
+            mutate(rname = paste0(rname, "(", rnumber, ")")) %>%
+            select(rname) %>%
+            unlist(use.names = FALSE)
+
+            tblRow = "<tr>"
+            tblRow = c(tblRow, "<td class = \"time\"></td>")
+            sessionStr = sprintf("<td class = \"sessionheader\">%s</td>", rooms)
+            tblRow = c(tblRow, sessionStr)
+            tblRow = c(tblRow, "</tr>")
+
+          rowData = rowData %>%
+            filter(type == "contributed")
+        }
+
+        tblRow = c(tblRow, "<tr>")
+        timeStr = sprintf("<td class = \"time\">%d</td>", rowData$time[1])
+        tblRow = c(tblRow, timeStr)
+        talks = rowData %>%
+          filter(type == "contributed") %>%
+          arrange(stream) %>%
+          mutate(rawEntry = gsub("\n", "<br/>", rawEntry)) %>%
+          mutate(rawEntry = ifelse(is.na(rawEntry), "", rawEntry))
+
+        talkStr = sprintf("<td class = \"contributed\">%s</td>", talks$rawEntry)
+        tblRow = c(tblRow, talkStr)
         tblRow = c(tblRow, "</tr>")
 
         #browser()

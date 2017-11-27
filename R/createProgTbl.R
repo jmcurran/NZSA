@@ -32,6 +32,7 @@ createProgTbl = function(db, overwrite = TRUE){
     progTbl = data_frame(programmeID = integer(),
                          sessionID = integer(),
                          day = integer(),
+                         block = integer(),
                          stream = integer(),
                          roomID = integer(),
                          time = integer(),
@@ -168,6 +169,20 @@ createProgTbl = function(db, overwrite = TRUE){
           filter(Time >= blockStart[block] & Time <= blockEnd[block])
 
         numTalks = nrow(talks)
+
+        ## add a sessionheader
+        progTbl = progTbl %>%
+          add_row(programmeID = programmeID + (0:5),
+                  sessionID = sessionID + 10 * 1:6,
+                  day = d,
+                  stream = 1:6,
+                  roomID = contribRooms[block, ] %>% unlist(use.names = FALSE),
+                  time = talks$Time[1],
+                  rawEntry = NA,
+                  type = "sessionheader")
+
+        programmeID = programmeID + 6
+
 
         for(stream in 1:6){
           talkEntries = talks %>% select((LETTERS[2:7])[stream]) %>% unlist(use.names = FALSE)
