@@ -25,6 +25,7 @@ createAffilTbl = function(db, overwrite = TRUE){
     mutate(affil = gsub("^.*Kakao corporation.*$", "Kakao Corporation", affil)) %>%
     mutate(affil = gsub("^.*National Chung[-]?Hsing University.*$",  "National Chung Hsing University", affil)) %>%
     mutate(affil = gsub("^.*National Tsing[-]?Hua University.*$",  "National Tsing Hua University", affil)) %>%
+    mutate(affil = gsub(", Japan [/] ", "/", affil)) %>%
     mutate(affil = str_trim(affil))
 
   affilTbl2 = affilTbl %>%
@@ -34,9 +35,25 @@ createAffilTbl = function(db, overwrite = TRUE){
   affilTbl2 = affilTbl2 %>%
     add_column(affilID = 1:nrow(affilTbl2), .before = 1)
 
-  dbWriteTable(db, "affilTbl", affilTbl2, overwrite = TRUE)
+  affilTbl = affilTbl %>%
+    left_join(affilTbl2, by = "affil") %>%
+    add_row(affilID = (1:3)+nrow(affilTbl2),
+            Affiliation = c("Ecological University of Bucharest", "National Institute of Statistics",
+                                    "Hitotsubashi University"),
+            affil = c("Ecological University of Bucharest", "National Institute of Statistics",
+                      "Hitotsubashi University")) %>%
+    distinct(Affiliation, .keep_all = TRUE)
 
-  affilTbl = affilTbl %>% left_join(affilTbl2, by = "affil")
+  dbWriteTable(db, "affilMapTbl", affilTbl, overwrite = TRUE)
+
+  affilTbl = affilTbl %>%
+    filter(!grepl("/", affil)) %>%
+    select(-Affiliation) %>%
+    distinct(affilID, .keep_all = TRUE) %>%
+    arrange(affilID)
+
+  dbWriteTable(db, "affilTbl", affilTbl, overwrite = TRUE)
+
 
   invisible(db)
 

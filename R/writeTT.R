@@ -13,7 +13,7 @@ title: \"None\"
   output:
   html_document:
   css: style.css
-  ---"
+---"
 
   writeLines(preamble, f1)
 
@@ -46,7 +46,7 @@ title: \"None\"
       if(nRows == 1){ ## usually housekeeping, keynote, mealbreak, poster, close
         tblRow = "<tr>"
 
-        if(rowData$type %in% c("close","housekeeping", "keynote", "mealbreak", "poster", "open")){
+        if(rowData$type %in% c("confclose","housekeeping", "keynote", "mealbreak", "poster", "open")){
           timeStr = sprintf("<td class = \"time\">%d</td>", rowData$time)
           tblRow = c(tblRow, timeStr)
 

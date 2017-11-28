@@ -21,7 +21,7 @@ createProgTbl = function(db, overwrite = TRUE){
     type[grep(posters, col)] = "poster"
     type[grep(welcome, col)] = "open"
     type[grepl(keynotes, col)] = "keynote"
-    type[grepl(confClose, col)] = "close"
+    type[grepl(confClose, col)] = "confclose"
     type[grepl("^$", type)] = "contributed"
 
     return(type)
@@ -62,7 +62,7 @@ createProgTbl = function(db, overwrite = TRUE){
         filter(types == "mealbreak")
 
       ceremonies = day %>%
-        filter(types == "open" | types == "close")
+        filter(types == "open" | types == "confclose")
 
       keynotes = day %>%
         filter(types == "keynote")
@@ -141,6 +141,8 @@ createProgTbl = function(db, overwrite = TRUE){
       }
 
       ## Process the contributed sessions
+
+      roomTbl = db %>% dbReadTable("roomTbl")
 
       contribRooms = contrib %>%
         filter(is.na(Time)) %>%
