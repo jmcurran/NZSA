@@ -13,7 +13,7 @@ createAuthorSubTbl = function(db, overwrite = TRUE){
     filter(!is.na(subID)) %>%
     arrange(authorSubID)
 
-  dbWriteTable(db, "authorSubTbl", authorSubTbl)
+  dbWriteTable(db, "authorSubTbl", authorSubTbl, overwrite = overwrite)
 
   return(db)
 }

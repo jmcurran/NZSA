@@ -1,4 +1,4 @@
-writeTT = function(path = "~/Dropbox/Work/2017/Conferences/NZSA-IASC/"){
+writeTT = function(path = "~/Dropbox/Work/2017/Conferences/NZSA-IASC/NZSA-IASC-Prog/"){
   db = getDB()
   progTbl = db %>% dbReadTable("progTbl")
   roomTbl = db %>% dbReadTable("roomTbl")
@@ -7,15 +7,15 @@ writeTT = function(path = "~/Dropbox/Work/2017/Conferences/NZSA-IASC/"){
 
   fileName = paste0(path, "00-Programme.Rmd")
   f1 = file(fileName, "w")
-
-  preamble = "---
-title: \"None\"
-  output:
-  html_document:
-  css: style.css
----"
-
-  writeLines(preamble, f1)
+#
+#   preamble = "---
+# title: \"None\"
+#   output:
+#   html_document:
+#   css: style.css
+# ---"
+#
+#   writeLines(preamble, f1)
 
   buildHTMLTable = function(dayProgTbl, d){
     numStreams = 6
@@ -65,7 +65,7 @@ title: \"None\"
           tblRow = c(tblRow, timeStr)
 
           rowData = rowData %>%
-            mutate(rawEntry = gsub("\n", "<br/>", rawEntry))
+            mutate(rawEntry = gsub("\n", "<br/><br/>", rawEntry))
 
           rowStr = sprintf("<td class = \"contributed\"></td>\n<td class = \"%s\">%s</td>",
                            rowData$type,
@@ -103,7 +103,7 @@ title: \"None\"
         talks = rowData %>%
           filter(type == "contributed") %>%
           arrange(stream) %>%
-          mutate(rawEntry = gsub("\n", "<br/>", rawEntry)) %>%
+          mutate(rawEntry = gsub("\n", "<br/><br/>", rawEntry)) %>%
           mutate(rawEntry = ifelse(is.na(rawEntry), "", rawEntry))
 
         talkStr = sprintf("<td class = \"contributed\">%s</td>", talks$rawEntry)

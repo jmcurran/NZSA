@@ -28,6 +28,6 @@ updateDB  = function(ss, progOnly = TRUE){
     dbWriteTable(db, "all_authors", all_authors, overwrite = TRUE)
   }
 
-  dbListTables(db)
-  dbDisconnect(db)
+  #dbListTables(db)
+  #dbDisconnect(db)
 }

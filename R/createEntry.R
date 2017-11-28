@@ -81,7 +81,7 @@ createEntry = function(fileCon,
     #   writeLines(tocEntry, fileCon)
     # }
 
-    #browser()
+    # browser()
 
     writeLines("<p style=\"text-align:center\">", fileCon)
 
@@ -147,9 +147,9 @@ createEntry = function(fileCon,
     writeLines(authorLine, fileCon)
 
     affilLine = if(numAffiliations == 1){
-      paste0(affiliations$affiliation, "<br />")
+      paste0(affiliations$affil, "<br />")
     }else{
-      paste0(sprintf("^%d^%s<br />", 1:numAffiliations, affiliations$affiliation))
+      paste0(sprintf("^%d^%s<br />", 1:numAffiliations, affiliations$affil))
     }
     writeLines(affilLine, fileCon)
     writeLines("</p>", fileCon)
