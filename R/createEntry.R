@@ -36,7 +36,7 @@ createEntry = function(fileCon,
 
     theTitle = titleTbl %>% filter(subID == thisSubID)
 
-    writeLines(sprintf("## %s {-}", theTitle$title), fileCon)
+    writeLines(sprintf("## %s {-}", tidyTitle(theTitle$title)), fileCon)
 
     # browser()
     # speaker = authorTbl %>% slice(authorID = progTbl$authorID[row])
@@ -176,7 +176,7 @@ createEntry = function(fileCon,
       theTitle$title = gsub("'S", "'s", theTitle$title)
     }
 
-    writeLines(sprintf("## %s {-}", theTitle$title), fileCon)
+    writeLines(sprintf("## %s {-}", tidyTitle(theTitle$title)), fileCon)
 
     speaker = authorTbl %>% slice(authorID = progTbl$authorID[row])
     speakerAffiliation1 = affilTbl %>% slice(affilID = speaker$affilID1)

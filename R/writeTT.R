@@ -20,7 +20,8 @@ writeTT = function(path = "~/Dropbox/Work/2017/Conferences/NZSA-IASC/NZSA-IASC-P
   buildHTMLTable = function(dayProgTbl, d){
     numStreams = 6
 
-    tbl = "<table>"
+    tbl = "<div style = \"overflow-x:auto;\">"
+    tbl = c(tbl, "<table>")
     tbl = c(tbl, "<thead>")
 
     tbl = c(tbl, "<tr>")
@@ -50,8 +51,15 @@ writeTT = function(path = "~/Dropbox/Work/2017/Conferences/NZSA-IASC/NZSA-IASC-P
           timeStr = sprintf("<td class = \"time\">%d</td>", rowData$time)
           tblRow = c(tblRow, timeStr)
 
-          rowData = rowData %>%
-            mutate(rawEntry = gsub("\n", "<br/>", rawEntry))
+          if(rowData$type == "keynote"){
+            splitData = unlist(rowData$rawEntry %>% str_split(pattern = "\n"))
+            splitData[1] = tidyTitle(splitData[1])
+            rowData = rowData %>%
+              mutate(rawEntry = paste0(splitData, collapse = "<br/>"))
+          }else{
+            rowData = rowData %>%
+              mutate(rawEntry = gsub("\n", "<br/>", rawEntry))
+          }
 
           rowStr = sprintf("<td class = \"%s\" colspan = \"%d\">%s</td>",
                            rowData$type,
@@ -64,8 +72,10 @@ writeTT = function(path = "~/Dropbox/Work/2017/Conferences/NZSA-IASC/NZSA-IASC-P
           timeStr = sprintf("<td class = \"time\">%d</td>", rowData$time)
           tblRow = c(tblRow, timeStr)
 
+          splitData = unlist(rowData$rawEntry %>% str_split(pattern = "\n"))
+          splitData[1] = tidyTitle(splitData[1])
           rowData = rowData %>%
-            mutate(rawEntry = gsub("\n", "<br/><br/>", rawEntry))
+            mutate(rawEntry = paste0(splitData, collapse = "<br/>"))
 
           rowStr = sprintf("<td class = \"contributed\"></td>\n<td class = \"%s\">%s</td>",
                            rowData$type,
@@ -100,10 +110,22 @@ writeTT = function(path = "~/Dropbox/Work/2017/Conferences/NZSA-IASC/NZSA-IASC-P
         tblRow = c(tblRow, "<tr>")
         timeStr = sprintf("<td class = \"time\">%d</td>", rowData$time[1])
         tblRow = c(tblRow, timeStr)
+
+        tidyEntry = function(x){
+          splitData = x %>%
+            str_split(pattern = "\n") %>%
+            sapply(function(y){
+              y[1] = tidyTitle(y[1])
+              paste0(y, collapse = "<br/>")
+              })
+        }
+
+        #browser()
+
         talks = rowData %>%
           filter(type == "contributed") %>%
           arrange(stream) %>%
-          mutate(rawEntry = gsub("\n", "<br/><br/>", rawEntry)) %>%
+          mutate(rawEntry = tidyEntry(rawEntry)) %>%
           mutate(rawEntry = ifelse(is.na(rawEntry), "", rawEntry))
 
         talkStr = sprintf("<td class = \"contributed\">%s</td>", talks$rawEntry)
@@ -161,7 +183,9 @@ writeTT = function(path = "~/Dropbox/Work/2017/Conferences/NZSA-IASC/NZSA-IASC-P
 
     tbl = c(tbl, "</tbody>")
     tbl = c(tbl, "</table>")
+    tbl = c(tbl, "</div>")
 
+    return(tbl)
   }
 
   writeLines("# Programme At A Glance {-}", f1)
