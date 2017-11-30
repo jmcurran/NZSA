@@ -8,7 +8,7 @@ updateDB  = function(ss, progOnly = TRUE){
   ## read the days first
   d = 1
   for(worksheet in Worksheets[1:4]){
-    rng = switch(d, "A1:G23", "A1:G19", "A1:G22", "A1:G16")
+    rng = switch(d, "A1:G23", "A1:G19", "A1:G22", "A1:G11")
 
     dayWs = ss %>% gs_read(ws = worksheet, range = rng, col_names = LETTERS[1:7])
     dbWriteTable(db, worksheet, dayWs, overwrite = TRUE)
