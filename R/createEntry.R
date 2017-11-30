@@ -5,6 +5,11 @@ createEntry = function(fileCon,
   if(isTalk){
     thisSubID = progTbl$subID[row]
 
+    # if(thisSubID == 197){
+    #   browser()
+    # }
+
+
     day = progTbl$day[row]
     stream = progTbl$stream[row]
     programmeID = progTbl$programmeID[row]
@@ -20,9 +25,9 @@ createEntry = function(fileCon,
       sprintf("%d:%s",hr, str_pad(as.character(mins), 2, "left", "0"))
     }
 
-    keynotes = progTbl %>% filter(type == "keynote") %>% pull(programmeID)
-    morningKeynotes = keynotes = progTbl %>% filter(type == "keynote",
-                                                    time <= 1100) %>% pull(programmeID)
+    keynotes = progTbl %>% filter(type == "keynote") %>% pull(subID)
+    morningKeynotes =progTbl %>% filter(type == "keynote",
+                                        time <= 1100) %>% pull(subID)
     keynote = FALSE
 
     if(thisSubID %in% keynotes){
@@ -113,7 +118,9 @@ createEntry = function(fileCon,
       unique(c(affil1 %>% filter(!is.na(affilID)) %>% distinct(affilID) %>% pull(affilID),
                affil2 %>% filter(!is.na(affilID)) %>% distinct(affilID) %>% pull(affilID)))
     }
-    affiliations = affilTbl %>% filter(affilID %in% affiliationNumbers)
+    affiliations = affilTbl %>%
+      filter(affilID %in% affiliationNumbers) %>%
+      slice(match(affiliationNumbers, affilID)) ## Hopefully this preserves order
     numAffiliations = length(affiliationNumbers)
 
     numAuthors = nrow(authorDetails)
@@ -123,6 +130,7 @@ createEntry = function(fileCon,
     }else{
       m = cbind(match(affil1$affilID, affiliationNumbers),
                 match(affil2$affilID, affiliationNumbers))
+
       afString = function(x){
         if(!is.na(x[1]) && is.na(x[2])){
           sprintf("%d",x[1])

@@ -1,4 +1,9 @@
 tidyTitle = function(title){
+
+  if(is.na(title)){
+    return("")
+  }
+
   proper = function(x){
     gsub("(?<=\\b)([a-z])", "\\U\\1", x, perl = TRUE)
   }

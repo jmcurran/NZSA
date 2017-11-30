@@ -1,6 +1,6 @@
 updateDB  = function(ss, progOnly = TRUE){
 
-  Worksheets = c("Monday", "Tuesday", "Wednesday", "Thursday", "Posters",
+  Worksheets = c("Monday", "Tuesday", "Wednesday", "Thursday",
                  "All Submissions", "Allocations", "All_Authors")
 
   db = dbConnect(RSQLite::SQLite(), "NZSA")
@@ -17,12 +17,10 @@ updateDB  = function(ss, progOnly = TRUE){
   }
 
   if(!progOnly){
-    posters = ss %>% gs_read(ws = "Posters")
     allSubs = ss %>% gs_read(ws = "All Submissions")
     allocs = ss %>% gs_read(ws = "Allocations")
     all_authors = ss %>% gs_read(ws = "All_Authors")
 
-    dbWriteTable(db, "posters", posters, overwrite = TRUE)
     dbWriteTable(db, "all_submissions", allSubs, overwrite = TRUE)
     dbWriteTable(db, "allocations", allocs, overwrite = TRUE)
     dbWriteTable(db, "all_authors", all_authors, overwrite = TRUE)

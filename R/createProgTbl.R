@@ -219,5 +219,18 @@ createProgTbl = function(db, overwrite = TRUE){
 
   #browser()
 
+  ## Check for duplicate entries
+  possDups = progTbl %>%
+    filter(!is.na(subID)) %>%
+    group_by(subID) %>%
+    filter(n() > 1) %>%
+    select(subID, day, stream, time) %>%
+    arrange(subID, day, time, stream)
+
+  if(nrow(possDups) > 0){
+    cat(paste("Warning: Potentially duplicated submissions\n"))
+    cat(sprintf("%3d %d %d %4d\n", possDups$subID, possDups$day, possDups$stream, possDups$time))
+  }
+
   dbWriteTable(db, "progTbl", progTbl, overwrite = overwrite)
 }
