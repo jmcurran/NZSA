@@ -21,7 +21,7 @@ writeProg = function(path = "~/Dropbox/Work/2017/Conferences/NZSA-IASC/NZSA-IASC
 
     writeLines(paste0("# Programme And Abstracts For ",
                       daysOfWeek[d]," ",
-                      (11:14)[d], "^th^ Of December {-}"),
+                      (11:14)[d], "^th^ Of December {#",daysOfWeek[d], " .unnumbered}"),
                f1)
 
     for(row in 1:nrow(dayProgTbl)){

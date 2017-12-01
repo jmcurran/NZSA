@@ -55,33 +55,39 @@ writeTT = function(path = "~/Dropbox/Work/2017/Conferences/NZSA-IASC/NZSA-IASC-P
             splitData = unlist(rowData$rawEntry %>% str_split(pattern = "\n"))
             splitData[1] = tidyTitle(splitData[1])
             rowData = rowData %>%
-              mutate(rawEntry = paste0(splitData, collapse = "<br/>"))
+              mutate(rawEntry = paste0(splitData, collapse = "<br/>")) %>%
+              mutate(hyperlinkTag = sprintf("#talk_%s",
+                                            str_pad(as.character(subID),3,"left","0"))) %>%
+              mutate(tableEntry = sprintf("<a href=\"%s%s\" style = \"color: white;\">%s</a>",
+                                          paste0(daysOfWeek[d], ".html"),
+                                          hyperlinkTag, rawEntry))
           }else{
             rowData = rowData %>%
-              mutate(rawEntry = gsub("\n", "<br/>", rawEntry))
+              mutate(tableEntry = gsub("\n", "<br/>", rawEntry))
           }
 
           rowStr = sprintf("<td class = \"%s\" colspan = \"%d\">%s</td>",
                            rowData$type,
                            numStreams,
-                           rowData$rawEntry)
+                           rowData$tableEntry)
           tblRow = c(tblRow, rowStr)
           tblRow = c(tblRow, "</tr>")
         }else{
+          browser()
           ## This only happens in one place day 1, 12 pm stream 1 is emptpy
-          timeStr = sprintf("<td class = \"time\">%d</td>", rowData$time)
-          tblRow = c(tblRow, timeStr)
-
-          splitData = unlist(rowData$rawEntry %>% str_split(pattern = "\n"))
-          splitData[1] = tidyTitle(splitData[1])
-          rowData = rowData %>%
-            mutate(rawEntry = paste0(splitData, collapse = "<br/>"))
-
-          rowStr = sprintf("<td class = \"contributed\"></td>\n<td class = \"%s\">%s</td>",
-                           rowData$type,
-                           rowData$rawEntry)
-          tblRow = c(tblRow, rowStr)
-          tblRow = c(tblRow, "</tr>")
+          # timeStr = sprintf("<td class = \"time\">%d</td>", rowData$time)
+          # tblRow = c(tblRow, timeStr)
+          #
+          # splitData = unlist(rowData$rawEntry %>% str_split(pattern = "\n"))
+          # splitData[1] = tidyTitle(splitData[1])
+          # rowData = rowData %>%
+          #   mutate(rawEntry = paste0(splitData, collapse = "<br/>"))
+          #
+          # rowStr = sprintf("<td class = \"contributed\"></td>\n<td class = \"%s\">%s</td>",
+          #                  rowData$type,
+          #                  rowData$rawEntry)
+          # tblRow = c(tblRow, rowStr)
+          # tblRow = c(tblRow, "</tr>")
         }
       }else if(nRows >=2){ ##  2-3 talks or 2-3 session headers and 2-3 talks
         #browser()
@@ -126,9 +132,15 @@ writeTT = function(path = "~/Dropbox/Work/2017/Conferences/NZSA-IASC/NZSA-IASC-P
           filter(type == "contributed") %>%
           arrange(stream) %>%
           mutate(rawEntry = tidyEntry(rawEntry)) %>%
-          mutate(rawEntry = ifelse(is.na(rawEntry), "", rawEntry))
+          mutate(rawEntry = ifelse(is.na(rawEntry), "", rawEntry)) %>%
+          mutate(hyperlinkTag = sprintf("#talk_%s",
+                                        str_pad(as.character(subID),3,"left","0"))) %>%
+          mutate(tableEntry = sprintf("<a href=\"%s%s\" style = \"color: black;\">%s</a>",
+                                      paste0(daysOfWeek[d], ".html"),
+                                      hyperlinkTag, rawEntry))
 
-        talkStr = sprintf("<td class = \"contributed\">%s</td>", talks$rawEntry)
+
+        talkStr = sprintf("<td class = \"contributed\">%s</td>", talks$tableEntry)
         tblRow = c(tblRow, talkStr)
         tblRow = c(tblRow, "</tr>")
 

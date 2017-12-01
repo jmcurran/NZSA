@@ -40,8 +40,11 @@ createEntry = function(fileCon,
     }
 
     theTitle = titleTbl %>% filter(subID == thisSubID)
+    talkTag = sprintf("#talk_%s", str_pad(as.character(thisSubID),3,"left","0"))
 
-    writeLines(sprintf("## %s {-}", tidyTitle(theTitle$title)), fileCon)
+    writeLines(sprintf("## %s {%s .unnumbered}",
+                       tidyTitle(theTitle$title),
+                       talkTag), fileCon)
 
     # browser()
     # speaker = authorTbl %>% slice(authorID = progTbl$authorID[row])
