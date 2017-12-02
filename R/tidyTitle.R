@@ -5,7 +5,7 @@ tidyTitle = function(title){
   }
 
   proper = function(x){
-    gsub("(?<=\\b)([[:alpha:]])", "\\U\\1", x, perl = TRUE)
+    gsub("(*UCP)\\b(\\p{L})", "\\U\\1", x, perl = TRUE)
   }
 
   correctCapitals = function(x){
