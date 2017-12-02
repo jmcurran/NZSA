@@ -1,15 +1,15 @@
 tidyTitle = function(title){
 
-  if(is.na(title)){
-    return("")
+  if(any(is.na(title))){
+    title[is.na(title)] = ""
   }
 
   proper = function(x){
-    gsub("(?<=\\b)([a-z])", "\\U\\1", x, perl = TRUE)
+    gsub("(?<=\\b)([[:alpha:]])", "\\U\\1", x, perl = TRUE)
   }
 
   correctCapitals = function(x){
-    allowed = "(ALTREP|NZ|GARCH|DNA|II|EWMA|R&amp;D|P\\(X&lt;Y\\)|gridSVG|von[-]?Mises|ARMA|SPSS|SVM|BIG-SIR|SSREM|GWAS|IGESS|LSSM|BIVAS)"
+    allowed = "(PLS|LSMM|ALTREP|NZ|GARCH|DNA|II|EWMA|R&amp;D|P\\(X&lt;Y\\)|gridSVG|von[-]?Mises|ARMA|SPSS|SVM|BIG-SIR|SSREM|GWAS|IGESS|LSSM|BIVAS)"
     x = gsub(allowed, "\\U\\1", x, ignore.case = TRUE, perl = TRUE)
     x = gsub("GRIDSVG", "gridSVG", x)
     x = gsub("VON-MISES", "von Mises", x)
