@@ -16,7 +16,7 @@ writeProg = function(path = "~/Dropbox/Work/2017/Conferences/NZSA-IASC/NZSA-IASC
   for(d in 1:4){
     dayProgTbl = progTbl %>% filter(day == d)
 
-    fileName = paste0(path, str_pad(as.character(d), 2, "left", "0"), "-", daysOfWeek[d], ".Rmd")
+    fileName = paste0(path, str_pad(as.character(d + 2), 2, "left", "0"), "-", daysOfWeek[d], ".Rmd")
     f1 = file(fileName, "w")
 
     writeLines(paste0("# Programme And Abstracts For ",

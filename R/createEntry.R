@@ -17,6 +17,7 @@ createEntry = function(fileCon,
     room = roomTbl %>% filter(roomID == progTbl$roomID[row])
 
     days = paste0(c("Monday", "Tuesday", "Wednesday", "Thursday"), " ", 11:14, "<sup>th</sup>")
+    daysOfWeek = c("Monday", "Tuesday", "Wednesday", "Thursday")
 
     fmtTime = function(tm){
       hr = floor(tm / 100)
@@ -29,22 +30,23 @@ createEntry = function(fileCon,
     morningKeynotes =progTbl %>% filter(type == "keynote",
                                         time <= 1100) %>% pull(subID)
     keynote = FALSE
+    talkTag = sprintf("talk_%s", str_pad(as.character(thisSubID),3,"left","0"))
 
     if(thisSubID %in% keynotes){
       keynote = TRUE
-      writeLines(sprintf("<p style=\"color:white;background-color:#ed2d2d;text-align:center\">Keynote: %s %s %s (%s)</p>",
-                         days[day], fmtTime(time), room$rname, room$rnumber), fileCon)
+      writeLines(sprintf("<div id = \"%s\"><p class=\"keynoteBanner\">Keynote: %s %s %s (%s)</p></div>",
+                         talkTag, days[day], fmtTime(time), room$rname, room$rnumber), fileCon)
     }else{
-      writeLines(sprintf("<p style=\"background-color:#ccccff;text-align:center\">%s %s %s (%s)</p>",
-                           days[day], fmtTime(time), room$rname, room$rnumber), fileCon)
+      writeLines(sprintf("<div id = \"%s\"><p class=\"contribBanner\">%s %s %s (%s)</p></div>",
+                           talkTag, days[day], fmtTime(time), room$rname, room$rnumber), fileCon)
     }
 
     theTitle = titleTbl %>% filter(subID == thisSubID)
-    talkTag = sprintf("#talk_%s", str_pad(as.character(thisSubID),3,"left","0"))
 
-    writeLines(sprintf("## %s {%s .unnumbered}",
-                       tidyTitle(theTitle$title),
-                       talkTag), fileCon)
+
+    writeLines(sprintf("## %s {.unnumbered}",
+                       tidyTitle(theTitle$title)),
+                       fileCon)
 
     # browser()
     # speaker = authorTbl %>% slice(authorID = progTbl$authorID[row])
@@ -138,6 +140,7 @@ createEntry = function(fileCon,
         if(!is.na(x[1]) && is.na(x[2])){
           sprintf("%d",x[1])
         }else{
+          x = sort(x) ## make sure the affiliations are displayed in a sensible order
           sprintf("%d,%d",x[1],x[2])
         }
       }
@@ -174,6 +177,10 @@ createEntry = function(fileCon,
     #   writeLines(abstractLine, fileCon)
     # }else{
     writeLines(abstract$abstract, fileCon)
+
+    writeLines("<p style = \"text-align: right\">", fileCon)
+    writeLines(sprintf("<a href = \"programme-at-a-glance.html#%s\">Return to Programme</a><br/><br/></p>\n\n",
+                       sprintf("%s-tbl", daysOfWeek[day])), fileCon)
     writeLines("<p class=\"pagebreak\"></p>", con = fileCon)
 
   }else{ #it's a poster

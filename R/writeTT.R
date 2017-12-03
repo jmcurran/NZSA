@@ -207,7 +207,7 @@ writeTT = function(path = "~/Dropbox/Work/2017/Conferences/NZSA-IASC/NZSA-IASC-P
       filter(day == d) %>%
       arrange(time)
 
-    writeLines(sprintf("## %s {-}", daysOfWeek[d]), f1)
+    writeLines(sprintf("## %s {#%s-tbl .unnumbered}", daysOfWeek[d], daysOfWeek[d]), f1)
 
     htmlTbl = buildHTMLTable(dayProgTbl, d)
     writeLines(htmlTbl, f1)
