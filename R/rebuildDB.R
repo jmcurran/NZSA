@@ -12,6 +12,7 @@ rebuildDB = function(refreshWebData = FALSE){
     createAbstractTbl() %>%
     createAuthorTbl() %>%
     createAuthorSubTbl() %>%
-    createProgTbl()
+    createProgTbl() %>%
+    createChairTbl()
 
 }

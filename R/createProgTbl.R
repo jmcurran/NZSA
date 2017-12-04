@@ -233,4 +233,6 @@ createProgTbl = function(db, overwrite = TRUE){
   }
 
   dbWriteTable(db, "progTbl", progTbl, overwrite = overwrite)
+
+  invisible(db)
 }
