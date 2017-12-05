@@ -17,6 +17,7 @@ tidyTitle = function(title){
     x = gsub("&lt", "&lt", x)
     x = gsub("[’']S", "'s", x)
     x = gsub("&Hellip;", "&hellip;", x)
+    x = gsub("ARt", "aRt", x)
 
     return(x)
   }

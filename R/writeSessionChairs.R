@@ -17,7 +17,7 @@ writeSessionChairs = function(path = "~/Dropbox/Work/2017/Conferences/NZSA-IASC/
     numStreams = 6
 
     tbl = "<div style = \"overflow-x:auto;\">"
-    tbl = c(tbl, "<table>")
+    tbl = c(tbl, "<table style = \"width: 1500px;\">")
     tbl = c(tbl, "<thead>")
 
     tbl = c(tbl, "<tr>")

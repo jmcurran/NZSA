@@ -212,6 +212,7 @@ createProgTbl = function(db, overwrite = TRUE){
   ## try and match the talks with the talk table
 
   titleTbl = dbReadTable(db, "titleTbl")
+  #browser()
 
   progTbl = progTbl %>%
     mutate(title = tolower(gsub("(^[^\n]+)\n.*$", "\\1", progTbl$rawEntry))) %>%

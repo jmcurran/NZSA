@@ -1,4 +1,9 @@
 writeProg = function(path = "~/Dropbox/Work/2017/Conferences/NZSA-IASC/NZSA-IASC-Prog/"){
+
+  if(grepl("windows", Sys.info()[[1]], ignore.case = TRUE)){
+    path = gsub("~", "C:/Users/jcur002/", path)
+  }
+
   db = getDB()
   progTbl = db %>% dbReadTable("progTbl") %>% arrange(day, time)
   affilTbl = db %>% dbReadTable("affilTbl")

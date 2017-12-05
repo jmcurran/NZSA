@@ -1,4 +1,9 @@
 writeIndexPages = function(path = "~/Dropbox/Work/2017/Conferences/NZSA-IASC/NZSA-IASC-Prog/"){
+
+  if(grepl("windows", Sys.info()[[1]], ignore.case = TRUE)){
+    path = gsub("~", "C:/Users/jcur002/", path)
+  }
+
   fileName = paste0(path, "02-Index-by-Author.Rmd")
   f1 = file(fileName, "w")
 
@@ -32,6 +37,10 @@ writeIndexPages = function(path = "~/Dropbox/Work/2017/Conferences/NZSA-IASC/NZS
 
   for(autID in authorIDs){
 
+    # if(autID == 132){
+    #   browser()
+    # }
+
     author = authorTbl %>%
       filter(authorID == autID) %>%
       pull(author)
@@ -47,6 +56,8 @@ writeIndexPages = function(path = "~/Dropbox/Work/2017/Conferences/NZSA-IASC/NZS
       days = progTbl %>%
         filter(subID %in% subs$subID) %>%
         pull(day)
+
+      # cat(paste(autID, "\n"))
 
       subs = subs %>%
         mutate(hyperLink = sprintf("<a href=\"%s.html#talk_%s\" style =\"color: blue;\">%s</a>",

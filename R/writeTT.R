@@ -1,4 +1,9 @@
 writeTT = function(path = "~/Dropbox/Work/2017/Conferences/NZSA-IASC/NZSA-IASC-Prog/"){
+
+  if(grepl("windows", Sys.info()[[1]], ignore.case = TRUE)){
+    path = gsub("~", "C:/Users/jcur002/", path)
+  }
+
   db = getDB()
   progTbl = db %>% dbReadTable("progTbl")
   roomTbl = db %>% dbReadTable("roomTbl")
@@ -21,7 +26,7 @@ writeTT = function(path = "~/Dropbox/Work/2017/Conferences/NZSA-IASC/NZSA-IASC-P
     numStreams = 6
 
     tbl = "<div style = \"overflow-x:auto;\">"
-    tbl = c(tbl, "<table>")
+    tbl = c(tbl, "<table style = \"width: 4000px;\">")
     tbl = c(tbl, "<thead>")
 
     tbl = c(tbl, "<tr>")
