@@ -1,5 +1,5 @@
 writeIndexPages = function(path = "~/Dropbox/Work/2017/Conferences/NZSA-IASC/NZSA-IASC-Prog/"){
-  fileName = paste0(path, "01-Index-by-Author.Rmd")
+  fileName = paste0(path, "02-Index-by-Author.Rmd")
   f1 = file(fileName, "w")
 
   db = getDB()
@@ -63,7 +63,7 @@ writeIndexPages = function(path = "~/Dropbox/Work/2017/Conferences/NZSA-IASC/NZS
   }
   close(f1)
 
-  fileName = paste0(path, "02-Index-by-Submission-Number.Rmd")
+  fileName = paste0(path, "03-Index-by-Submission-Number.Rmd")
   f1 = file(fileName, "w")
   writeLines("# Index by Submission Number {#indexbysubmission .unnumbered}", f1)
   writeLines("<table>", f1)

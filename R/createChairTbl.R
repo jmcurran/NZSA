@@ -5,7 +5,7 @@ createChairTbl = function(db, overwrite = TRUE){
                   Thursday = dbReadTable(db, "Thursday_Chairs"))
 
   getType = function(col){
-    keynotes = "(Luke|Simon|Ross|Alan|Alastair|Michael|Jenny)"
+    keynotes = "(Luke|Simon|Ross|Alan|Alastair|Jenny)"
     meals =  "(Morning|Lunch|Afternoon|Dinner)"
     posters = "Lightning"
     welcome = "Opening"
@@ -90,14 +90,15 @@ createChairTbl = function(db, overwrite = TRUE){
         select(-id)
 
       ## This is the number of contributor blocks across a day
-      numContribBocks = nrow(contribRooms)
+      numContribBlocks = nrow(contribRooms)
       contrib = contrib %>%
         mutate(Time = as.integer(Time))
 
       sessionTime = contrib$Time[which(is.na(contrib$Time)) + 1]
 
-      for(block in 1:numContribBocks){
+      for(block in 1:numContribBlocks){
         sessionID = d * 1000 + block * 100
+        #browser()
         talks = contrib %>%
           filter(Time == sessionTime[block])
 
@@ -114,12 +115,15 @@ createChairTbl = function(db, overwrite = TRUE){
                   type = "sessionheader")
 
 
-        chairEntries = talks %>% select(LETTERS[2:7]) %>% unlist(use.names = FALSE)
+        chairEntries = talks %>%
+          select(LETTERS[2:7]) %>%
+          unlist(use.names = FALSE)
+
         chairTbl = chairTbl %>%
           add_row(sessionID = sessionID + 10,
                   day = d,
                   stream = 1:6,
-                  roomID = contribRooms[block, 1:6] %>% unlist(use.names = FALSE),
+                  roomID = contribRooms[block, ] %>% unlist(use.names = FALSE),
                   time = talks$Time,
                   chair = chairEntries,
                   type = "contributed")
@@ -133,8 +137,21 @@ createChairTbl = function(db, overwrite = TRUE){
 
   chairTbl = buildTbl()
 
+  #browser()
+
+  chairTbl = chairTbl %>%
+    mutate(chair = str_trim(gsub("(^[^(]*)\\(.*$", "\\1", chair)))
+
+  authorTbl = db %>% dbReadTable("authorTbl")
+  chairEmails = chairTbl %>%
+    left_join(authorTbl, by = c("chair" = "author")) %>%
+    filter(type != "sessionheader") %>%
+    select(chair, Email)
+
 
   dbWriteTable(db, "chairTbl", chairTbl, overwrite = overwrite)
+  dbWriteTable(db, "chairEmailTbl", chairEmails, overwrite = overwrite)
+
 
   invisible(db)
 }

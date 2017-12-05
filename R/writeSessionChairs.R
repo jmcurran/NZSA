@@ -10,7 +10,7 @@ writeSessionChairs = function(path = "~/Dropbox/Work/2017/Conferences/NZSA-IASC/
 
   daysOfWeek = paste0(c("Mon", "Tues", "Wednes", "Thurs"), "day")
 
-  fileName = paste0(path, "07-Session-Chairs.Rmd")
+  fileName = paste0(path, "01-Session-Chairs.Rmd")
   f1 = file(fileName, "w")
 
   buildHTMLTable = function(dayChairsTbl, d){
