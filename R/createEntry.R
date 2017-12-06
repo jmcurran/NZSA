@@ -1,7 +1,8 @@
 createEntry = function(fileCon,
                        progTbl, affilTbl, authorTbl, authorSubTbl, titleTbl, abstractTbl, roomTbl,
                        row,
-                       isTalk = TRUE){
+                       isTalk = TRUE,
+                       printVersion = FALSE){
   if(isTalk){
     thisSubID = progTbl$subID[row]
 
@@ -14,7 +15,9 @@ createEntry = function(fileCon,
     stream = progTbl$stream[row]
     programmeID = progTbl$programmeID[row]
     time = progTbl$time[row]
+    roomID = progTbl$roomID[row]
     room = roomTbl %>% filter(roomID == progTbl$roomID[row])
+
 
     days = paste0(c("Monday", "Tuesday", "Wednesday", "Thursday"), " ", 11:14, "<sup>th</sup>")
     daysOfWeek = c("Monday", "Tuesday", "Wednesday", "Thursday")
@@ -179,8 +182,18 @@ createEntry = function(fileCon,
     writeLines(abstract$abstract, fileCon)
 
     writeLines("<p style = \"text-align: right\">", fileCon)
-    writeLines(sprintf("<a href = \"programme-at-a-glance.html#%s\">Return to Programme</a><br/><br/></p>\n\n",
-                       sprintf("%s-tbl", daysOfWeek[day])), fileCon)
+    if(printVersion){
+      if(keynote){
+        writeLines(sprintf("<a href = \"programme-at-a-glance.html#%s\">Return to Programme</a><br/><br/></p>\n\n",
+                           sprintf("%s_overview", daysOfWeek[day])), fileCon)
+      }else{
+        writeLines(sprintf("<a href = \"programme-at-a-glance.html#%s\">Return to Programme</a><br/><br/></p>\n\n",
+                           sprintf("%s_%d", daysOfWeek[day], roomID)), fileCon)
+      }
+    }else{
+      writeLines(sprintf("<a href = \"programme-at-a-glance.html#%s\">Return to Programme</a><br/><br/></p>\n\n",
+                         sprintf("%s-tbl", daysOfWeek[day])), fileCon)
+    }
     writeLines("<p class=\"pagebreak\"></p>", con = fileCon)
 
   }else{ #it's a poster

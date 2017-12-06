@@ -1,4 +1,5 @@
-writeProg = function(path = "~/Dropbox/Work/2017/Conferences/NZSA-IASC/NZSA-IASC-Prog/"){
+writeProg = function(path = "~/Dropbox/Work/2017/Conferences/NZSA-IASC/NZSA-IASC-Prog/",
+                     printVersion = FALSE){
 
   if(grepl("windows", Sys.info()[[1]], ignore.case = TRUE)){
     path = gsub("~", "C:/Users/jcur002/", path)
@@ -32,7 +33,7 @@ writeProg = function(path = "~/Dropbox/Work/2017/Conferences/NZSA-IASC/NZSA-IASC
     for(row in 1:nrow(dayProgTbl)){
       if(!is.na(dayProgTbl$subID[row])){
         createEntry(f1, dayProgTbl, affilTbl, authorTbl, authorSubTbl, titleTbl,
-                  abstractTbl, roomTbl,  row)
+                  abstractTbl, roomTbl,  row, isTalk = TRUE, printVersion = printVersion)
       }
     }
     close(f1)
