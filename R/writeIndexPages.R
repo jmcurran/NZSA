@@ -57,7 +57,7 @@ writeIndexPages = function(path = "~/Dropbox/Work/2017/Conferences/NZSA-IASC/NZS
         filter(subID %in% subs$subID) %>%
         pull(day)
 
-      # cat(paste(autID, "\n"))
+      cat(paste(autID, "\n"))
 
       subs = subs %>%
         mutate(hyperLink = sprintf("<a href=\"%s.html#talk_%s\" style =\"color: blue;\">%s</a>",

@@ -12,29 +12,35 @@ writeTT = function(path = "~/Dropbox/Work/2017/Conferences/NZSA-IASC/NZSA-IASC-P
 
   fileName = paste0(path, "00-Programme.Rmd")
   f1 = file(fileName, "w")
-  #
-  #   preamble = "---
-  # title: \"None\"
-  #   output:
-  #   html_document:
-  #   css: style.css
-  # ---"
-  #
-  #   writeLines(preamble, f1)
+
+  preamble = "---
+  output:
+    bookdown::gitbook:
+      includes:
+        in_header: tblsawinclude.html
+  ---"
+
+  writeLines(preamble, f1)
 
   buildHTMLTable = function(dayProgTbl, d) {
     numStreams = 6
 
     tbl = "<div style = \"overflow-x:auto;\">"
-    tbl = c(tbl, "<table style = \"width: 4000px;\">")
+    tbl = c(tbl, "<table class=\"tablesaw\" data-tablesaw-mode=\"swipe\" data-tablesaw-minimap>")
+
     tbl = c(tbl, "<thead>")
 
     tbl = c(tbl, "<tr>")
-    tbl = c(tbl, "<th class = \"time\">Time</th>")
+    tbl = c(tbl, "<th scope=\"col\" data-tablesaw-priority=\"persist\" class=\"time\">Time</th>")
     tbl = c(tbl, sprintf(
-      "<th class = \"day\">%s</th>",
+      "<th scope=\"col\" data-tablesaw-priority=\"persist\" class=\"day\">%s</th>",
       paste0(daysOfWeek[d], " ", 10 + d, "<sup>th</sup>")
     ))
+
+    for(i in 1:5){
+      tbl = c(tbl, "<th scope=\"col\" class=\"day\"></th>")
+    }
+
     tbl = c(tbl, "</tr>")
     tbl = c(tbl, "</thead>")
 
